@@ -1,0 +1,39 @@
+common:
+- wheel
+- cython
+- asyncio
+- pyserial
+- requests
+- python-nmap
+- python-dateutil
+- urllib3
+- uvicorn
+- decorator
+- uvloop
+- netifaces
+- starlette
+- python-multipart
+- pyusb
+- aiofiles
+- dataclasses
+- black
+- numpy
+- scipy
+- pandas
+- matplotlib
+- opencv-python
+- cryptography==3.1.1
+- paramiko==2.6.0
+bt:
+- bluepy
+- pybluez
+- aioblescan
+misc:
+- importlib
+- importlib_metadata
+- py-bcrypt
+- pypiserver
+- passlib
+- lxml
+- bs4
+- mpld3
