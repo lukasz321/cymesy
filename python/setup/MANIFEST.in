@@ -1,0 +1,2 @@
+include files/*.yaml
+include files/i2c_templates/* 
