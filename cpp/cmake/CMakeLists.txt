@@ -5,4 +5,3 @@ project(practice)
 
 # add the executable
 add_executable(practice main.cpp)
-
