@@ -202,11 +202,11 @@ def add_site(args):
 
     server_ip = str(args.server_ip)
 
-    gen_ip_addr = f"10.8.0.{random.randint(6, 255)}/24"
+    gen_ip_addr = f"10.8.0.{random.randint(6, 255)}"
     content = (
         f"[Interface]\n"
         f"PrivateKey = {private_key}\n"
-        f"Address = {gen_ip_addr}\n"
+        f"Address = {gen_ip_addr}/24\n"
         f"PostUp = ip rule add table 200 from {server_ip}\n"
         f"PostUp = ip route add table 200 default via {server_ip}\n"
         f"PreDown = ip rule delete table 200 from {server_ip}\n"
@@ -247,7 +247,7 @@ def add_site(args):
         "If you are using this tool on the server end, then simply use the following one-liner:"
     )
     print(
-        f"python3 vpn_server.py --server --client_ip {gen_ip_addr} --client_key {public_key}"
+        f"python3 vpn_install.py --server --client_ip {gen_ip_addr} --client_key {public_key}"
     )
 
 
@@ -444,5 +444,5 @@ if __name__ == "__main__":
                 "\nTo add this site as a connection, run the following command on your client:"
             )
             print(
-                f"python3 vpn_install.py --server_ip {external_ip} --server_key {key}"
+                f"python3 vpn_install.py --client --server_ip {external_ip} --server_key {key}"
             )
