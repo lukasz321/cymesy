@@ -36,6 +36,7 @@ import subprocess
 import ipaddress
 import random
 import os
+from enum import Enum
 import sys
 from typing import List
 import urllib.request
@@ -43,6 +44,17 @@ import urllib.request
 if not os.getuid() == 0:
     print("You must run this script as a superuser.")
     sys.exit(1)
+
+#TODO
+def print_connections():
+    pass
+
+class C(str, Enum):
+    YLW = "\033[93m\033[1m"
+    GRN = "\033[92m\033[1m"
+    RED = "\033[91m\033[1m"
+    CYN = "\033[96m\033[1m"
+    END = "\033[0m\033[0m"
 
 
 class Prompt:
@@ -221,7 +233,7 @@ def add_site(args):
     while True:
         if not args.site_name:
             args.site_name = Prompt.input(
-                "How do you want to name this connection? ex. syr, sf, home, office..."
+                "How do you want to name this connection? ex. syr, factory, home, office...:"
             )
 
         if not os.path.exists(f"/etc/wireguard/{args.site_name}.conf"):
@@ -239,16 +251,14 @@ def add_site(args):
     with open("/etc/wireguard/public.key", "r") as f:
         public_key = f.read().rstrip()
 
-    print("Share the following client IP and public key with your VPN admin.")
+    print(C.GRN + "\nShare the following client IP and public key with your VPN admin:" + C.END)
     print(gen_ip_addr)
     print(public_key)
-    print("")
-    print(
-        "If you are using this tool on the server end, then simply use the following one-liner:"
-    )
+    print(C.GRN + "\nOr simply share the following one-liner for use w/ this script:" + C.END)
     print(
         f"python3 vpn_install.py --server --client_ip {gen_ip_addr} --client_key {public_key}"
     )
+    print(C.YLW + f"\nConnect to {args.site_name} via \"sudo wg-quick up {args.site_name}\"." + C.END)
 
 
 def bootstrap_server():
@@ -389,7 +399,7 @@ if __name__ == "__main__":
 
     if not args.client and not args.server:
         # User has not passed neither client nor server flag.
-        if Prompt.choose("Is this a server [S] or a client [C]?", ["S", "C"]) == "S":
+        if Prompt.choose("Are you a server [S] or are you a client [C]?", ["S", "C"]) == "S":
             args.server = True
         else:
             args.client = True
@@ -404,7 +414,7 @@ if __name__ == "__main__":
         if not args.server_ip:
             while True:
                 print(
-                    f"\nYou have not passed server's IP address.\n"
+                    f"\nYou have not passed server's IP address (--server_ip).\n"
                     "You can look it up in the network controller it or simply "
                     'google "what is my ip address?" at the VPN (server) site.'
                 )
@@ -420,7 +430,7 @@ if __name__ == "__main__":
 
         if not args.server_key:
             print(
-                f"\nYou have not passed server's public key.\n"
+                f"\nYou have not passed server's public key (--server_key).\n"
                 "You can acquire it by running the following command [on the server, of course]:\n"
                 "sudo cat /etc/wireguard/public.key"
             )
