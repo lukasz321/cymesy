@@ -39,7 +39,7 @@ class Zebra:
 
     def __init__(self, serial_number: str = "", vid: str = "", pid: str = ""):
         if not serial_number:
-            env_var = os.environ["MFG_PRINTER"]
+            env_var = os.environ["ZEBRA_PRINTER"]
             if "-" in env_var:
                 serial_number, vid, pid = env_var.split("-")
             else:
@@ -150,7 +150,7 @@ class Zebra:
         """
         Find connected Zebra printer (only one expected) and extract its S/N.
         Then export the serial number to environment variables in the following format:
-        MFG_PRINTER="SERIALNUM-VID-PID"
+        ZEBRA_PRINTER="SERIALNUM-VID-PID"
         This function also sets the udev rules.
         """
 
@@ -221,7 +221,7 @@ class Zebra:
                 is_supplementary = True
                 break
 
-        printer_key = "MFG_PRINTER_XXL" if is_supplementary else "MFG_PRINTER"
+        printer_key = "ZEBRA_PRINTER_XXL" if is_supplementary else "ZEBRA_PRINTER"
         Environment.set_variable(printer_key, "-".join([serial_number, vid, pid]))
         zebra = Zebra(serial_number, vid, pid)
         zebra.test_print()
@@ -287,26 +287,26 @@ def main():
         if success:
             Prompt.acknowledge("Restart the terminal for changes to take effect, OK?")
     elif args.test:
-        if os.environ.get("MFG_PRINTER"):
-            sn, vid, pid = os.environ["MFG_PRINTER"].split("-")
+        if os.environ.get("ZEBRA_PRINTER"):
+            sn, vid, pid = os.environ["ZEBRA_PRINTER"].split("-")
             zebra = Zebra(sn, vid, pid)
             zebra.test_print()
             time.sleep(1)
         else:
-            log.warning("MFG_PRINTER not defined in the environment.")
+            log.warning("ZEBRA_PRINTER not defined in the environment.")
 
-        if os.environ.get("MFG_PRINTER_XXL"):
-            sn, vid, pid = os.environ["MFG_PRINTER_XXL"].split("-")
+        if os.environ.get("ZEBRA_PRINTER_XXL"):
+            sn, vid, pid = os.environ["ZEBRA_PRINTER_XXL"].split("-")
             zebra = Zebra(sn, vid, pid)
             zebra.test_print()
         else:
-            log.warning("MFG_PRINTER_XXL not defined in the environment.")
+            log.warning("ZEBRA_PRINTER_XXL not defined in the environment.")
     elif args.name:
-        if os.environ.get("MFG_PRINTER"):
-            print(Zebra.get_printer_name(os.environ["MFG_PRINTER"].split("-")[0]))
+        if os.environ.get("ZEBRA_PRINTER"):
+            print(Zebra.get_printer_name(os.environ["ZEBRA_PRINTER"].split("-")[0]))
 
-        if os.environ.get("MFG_PRINTER_XXL"):
-            print(Zebra.get_printer_name(os.environ["MFG_PRINTER_XXL"].split("-")[0]))
+        if os.environ.get("ZEBRA_PRINTER_XXL"):
+            print(Zebra.get_printer_name(os.environ["ZEBRA_PRINTER_XXL"].split("-")[0]))
     else:
         log.error(
             "************************************************",

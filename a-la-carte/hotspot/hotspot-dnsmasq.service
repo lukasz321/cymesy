@@ -1,0 +1,18 @@
+[Unit]
+Description=DHCP Server
+Before=hotspot-hostapd.service
+IgnoreOnIsolate=true
+
+[Service]
+ExecStartPre=-/bin/mkdir -p /var/lib/misc
+ExecStartPre=-/bin/touch /var/lib/misc/dnsmasq.leases
+ExecStartPre=/sbin/ifconfig wlan0 down
+ExecStartPre=/usr/sbin/ip addr flush dev wlan0
+ExecStartPre=/sbin/ifconfig wlan0 up
+ExecStartPre=/usr/sbin/ip addr add 172.16.1.1/24 dev wlan0
+ExecStart=/sbin/dnsmasq
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

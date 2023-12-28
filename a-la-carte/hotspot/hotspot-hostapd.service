@@ -1,0 +1,14 @@
+[Unit]
+Description=WiFi AP via hostapd
+After=hotspot-dnsmasq.service 
+BindsTo=hotspot-dnsmasq.service
+IgnoreOnIsolate=true
+
+[Service]
+ExecStartPre=/bin/sleep 3
+ExecStart=/sbin/hostapd /etc/hostapd-demo.conf
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
